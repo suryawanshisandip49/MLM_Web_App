@@ -22,42 +22,48 @@ namespace MLM_Web_App.Controllers
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
                 StringBuilder builder = new StringBuilder();
                 foreach (byte b in bytes)
-                {
-                    builder.Append(b.ToString("x2")); // convert to hex string
-                }
+                    builder.Append(b.ToString("x2"));
                 return builder.ToString();
             }
         }
 
-        // GET: Login
+        // ✅ GET: Login
         public IActionResult Index()
         {
             return View();
         }
 
-        // POST: Login
+        // ✅ POST: Login
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(string email, string password)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
                 ViewBag.Error = "Please enter Email and Password.";
                 return View();
             }
-          
-           // email = email.Trim().ToLower();
-            string hashedPassword = HashPassword(password);
-         
+
+            string normalizedEmail = email.Trim().ToLower();
+            string trimmedPassword = password.Trim();
+
+            // ✅ Admin Login
+            if (normalizedEmail == "admin@mlm.com" && trimmedPassword == "admin123")
+            {
+                HttpContext.Session.Clear();
+                HttpContext.Session.SetString("UserRole", "Admin");
+                HttpContext.Session.SetString("UserName", "Administrator");
+
+                return RedirectToAction("Users", "Admin");
+            }
+
+            // ✅ Regular User Login
+            string hashedPassword = HashPassword(trimmedPassword);
 
             var user = _context.Users.FirstOrDefault(u =>
-    u.Email.ToLower().Trim() == email.ToLower().Trim() &&
-    u.PasswordHash == hashedPassword &&
-        u.IsActive);
-
-            // Check user in database
-            //var user = _context.Users
-            //    .FirstOrDefault(u => u.Email == email && u.PasswordHash == password);
+                u.Email.ToLower().Trim() == normalizedEmail &&
+                u.PasswordHash == hashedPassword &&
+                u.IsActive);
 
             if (user == null)
             {
@@ -65,21 +71,21 @@ namespace MLM_Web_App.Controllers
                 return View();
             }
 
-            // Store user info in session
+            HttpContext.Session.Clear();
             HttpContext.Session.SetInt32("UserId", user.Id);
             HttpContext.Session.SetString("UserCode", user.UserCode);
             HttpContext.Session.SetString("UserName", user.FullName);
+            HttpContext.Session.SetString("UserRole", "User");
 
-            // Redirect to Dashboard
             return RedirectToAction("Index", "Dashboard");
         }
 
-        // Logout
+        // ✅ Logout
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear(); // Remove all session data
+            HttpContext.Session.Clear();
             TempData["Success"] = "You have been logged out successfully!";
-            return RedirectToAction("Index", "Login");
+            return RedirectToAction("Index");
         }
     }
 }

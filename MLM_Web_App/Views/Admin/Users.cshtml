@@ -20,6 +20,7 @@
                        class="btn btn-sm @(user.IsActive ? "btn-danger" : "btn-success")">
                         @(user.IsActive ? "Deactivate" : "Activate")
                     </a>
+
                     @if (user.Level1Members.Any())
                     {
                         <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#user-@user.Id">

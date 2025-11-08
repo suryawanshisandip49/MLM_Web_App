@@ -8,6 +8,21 @@
 {
     <div class="alert alert-danger">@ViewBag.Error</div>
 }
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2 class="mb-4 text-center">Login</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
 
 <div class="card p-4 shadow-sm mt-3" style="max-width:450px; margin:auto;">
     <form asp-action="Index" method="post">
@@ -15,12 +30,15 @@
 
         <div class="form-group mb-3">
             <label>Email</label>
-            <input type="email" name="email" class="form-control" placeholder="Enter Email" required />
+            <input type="email" name="email" class="form-control"
+                   placeholder="Enter Email" required oninput="this.value=this.value.trim().toLowerCase()" />
+
         </div>
 
         <div class="form-group mb-3">
             <label>Password</label>
-            <input type="password" name="password" class="form-control" placeholder="Enter Password" required />
+            <input type="password" name="password" class="form-control"
+                   placeholder="Enter Password" required oninput="this.value=this.value.trim()" />
         </div>
 
         <button type="submit" class="btn btn-primary w-100">Login</button>

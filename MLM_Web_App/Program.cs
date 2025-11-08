@@ -12,10 +12,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MLMConnection")));
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-.AddCookie(options => { options.LoginPath = "/Account/Login"; });
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//.AddCookie(options => { options.LoginPath = "/Account/Login"; });
 
-//builder.Services.AddSession();
+builder.Services.AddSession();
+//var app = builder.Build();
 
 builder.Services.AddSession(options =>
 {

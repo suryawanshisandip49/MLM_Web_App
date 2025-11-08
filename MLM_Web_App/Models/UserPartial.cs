@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace MLM_Web_App.Models
@@ -38,35 +39,28 @@ namespace MLM_Web_App.Models
             (Level3Members.Count() * Level3Rate);
     }
 
-    // 🏷️ Metadata class for validation
+    // 🏷️ Metadata with annotations for validation and UI display
     public class UserMetadata
     {
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "User Code is required.")]
-        [Display(Name = "User Code")]
-        [ScaffoldColumn(false)]
+        [Required, Display(Name = "User Code")]
+        [ScaffoldColumn(false)] // ✅ hide from scaffolding and ignore on validation
         public string UserCode { get; set; } = null!;
 
-        [Required(ErrorMessage = "Full Name is required.")]
-        [StringLength(100, ErrorMessage = "Full Name cannot exceed 100 characters.")]
-        [Display(Name = "Full Name")]
+        [Required, StringLength(100), Display(Name = "Full Name")]
         public string FullName { get; set; } = null!;
 
-        [Required(ErrorMessage = "Email address is required.")]
-        [EmailAddress(ErrorMessage = "Enter a valid email address.")]
-        [Display(Name = "Email Address")]
+        [Required, EmailAddress, Display(Name = "Email Address")]
         public string Email { get; set; } = null!;
-
-        [Required(ErrorMessage = "Mobile number is required.")]
-        [RegularExpression(@"^[6-9]\d{9}$", ErrorMessage = "Enter a valid 10-digit mobile number starting with 6-9.")]
+        [Required(ErrorMessage = "Mobile number is required")]
+        [RegularExpression(@"^[6-9]\d{9}$", ErrorMessage = "Enter a valid 10-digit mobile number starting with 6-9")]
         [Display(Name = "Mobile Number")]
         public string? Mobile { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+
+        [Required, DataType(DataType.Password), Display(Name = "Password")]
         public string PasswordHash { get; set; } = null!;
 
         [Display(Name = "Sponsor Code")]
@@ -78,8 +72,7 @@ namespace MLM_Web_App.Models
         [Display(Name = "Active Status")]
         public bool IsActive { get; set; }
 
-        [Display(Name = "Created Date")]
-        [DataType(DataType.DateTime)]
+        [Display(Name = "Created Date"), DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
     }
 }

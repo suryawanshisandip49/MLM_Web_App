@@ -15,18 +15,26 @@ namespace MLM_Web_App.Controllers
 
         public IActionResult Index()
         {
-            // ✅ Example: Fetch logged-in user
-            // (Later you’ll get user ID from session/login)
-           // int userId = 1; // Temporary demo value
+            var role = HttpContext.Session.GetString("UserRole");
 
-            // ✅ Check if user logged in
-            int? userId = HttpContext.Session.GetInt32("UserId");
-            if (userId == null)
+            if (string.IsNullOrEmpty(role))
             {
+                TempData["Error"] = "Session expired. Please log in again.";
                 return RedirectToAction("Index", "Login");
             }
 
-            // Include all 3 levels
+            // ✅ Admin can view dashboard also
+            if (role == "Admin")
+            {
+                ViewBag.UserName = "Administrator";
+                return View();
+            }
+
+            // ✅ For normal user
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            if (userId == null)
+                return RedirectToAction("Index", "Login");
+
             var user = _context.Users
                 .Include(u => u.InverseSponsor)
                     .ThenInclude(l1 => l1.InverseSponsor)
@@ -34,10 +42,8 @@ namespace MLM_Web_App.Controllers
                 .FirstOrDefault(u => u.Id == userId);
 
             if (user == null)
-            {
                 return NotFound("User not found");
-            }
-            // ✅ Pass username and usercode to view
+
             ViewBag.UserName = HttpContext.Session.GetString("UserName");
             ViewBag.UserCode = HttpContext.Session.GetString("UserCode");
 
