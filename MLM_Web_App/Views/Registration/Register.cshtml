@@ -1,0 +1,70 @@
+﻿@model MLM_Web_App.Models.User
+@{
+    ViewData["Title"] = "User Registration";
+}
+
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+    <div class="card shadow-lg p-4" style="width: 400px; border-radius: 15px;">
+        <div class="text-center mb-3">
+            <h2 class="fw-bold">Register</h2>
+            <p class="text-muted">Create your MLM account</p>
+        </div>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+        <form asp-action="Register" method="post">
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label">Full Name</label>
+                <input asp-for="FullName" class="form-control" placeholder="Enter full name" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="Enter email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Mobile" class="form-label"></label>
+                <input asp-for="Mobile"
+                       class="form-control"
+                       type="text"
+                       placeholder="Enter 10-digit mobile number"
+                       pattern="[6-9]{1}[0-9]{9}"
+                       title="Please enter a valid 10-digit mobile number starting with 6–9"
+                       maxlength="10"
+                       minlength="10"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" />
+                <span asp-validation-for="Mobile" class="text-danger"></span>
+            </div>
+
+
+            <div class="mb-3">
+                <label asp-for="PasswordHash" class="form-label">Password</label>
+                <input asp-for="PasswordHash" type="password" class="form-control" placeholder="Enter password" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="SponsorUserCode" class="form-label">Sponsor Code (optional)</label>
+                <input asp-for="SponsorUserCode" class="form-control" placeholder="Enter sponsor code" />
+                <span asp-validation-for="SponsorUserCode" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 fw-bold">Register</button>
+
+            <div class="text-center mt-3">
+                <p class="small text-muted">
+                    Already have an account?
+                    <a asp-controller="Login" asp-action="Index">Login here</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

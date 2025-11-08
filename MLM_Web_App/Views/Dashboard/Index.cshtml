@@ -1,0 +1,79 @@
+﻿@model MLM_Web_App.Models.User
+@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="container mt-4">
+    <div class="card shadow p-3">
+        <h2>Welcome, @ViewBag.UserName 👋</h2>
+        <p><strong>User ID:</strong> @ViewBag.UserCode</p>
+    </div>
+
+    <hr />
+
+    <h4>Your Direct Referrals (Level 1)</h4>
+    <ul>
+        @foreach (var l1 in Model.InverseSponsor)
+        {
+            <li>@l1.FullName (@l1.UserCode)</li>
+        }
+    </ul>
+</div>
+<div class="container mt-4">
+    <h2>Welcome, @Model.FullName!</h2>
+    <hr />
+
+    <div class="row text-center">
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h6>User ID</h6>
+                <h4>@Model.UserCode</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h6>Direct Referrals (Level 1)</h6>
+                <h4>@Model.Level1Members.Count()</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+                <h6>Total Team (L1 + L2 + L3)</h6>
+                <h4>@(Model.Level1Members.Count() + Model.Level2Members.Count() + Model.Level3Members.Count())</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-3 shadow-sm mt-4">
+        <h4>💰 Total Income: ₹@Model.TotalIncome</h4>
+        <small>
+            Level 1: ₹100 × @Model.Level1Members.Count() |
+            Level 2: ₹50 × @Model.Level2Members.Count() |
+            Level 3: ₹25 × @Model.Level3Members.Count()
+        </small>
+    </div>
+
+    <div class="mt-4">
+        <h5>Direct Referrals</h5>
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>User Code</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in Model.Level1Members)
+                {
+                    <tr>
+                        <td>@member.Id</td>
+                        <td>@member.FullName</td>
+                        <td>@member.UserCode</td>
+                        <td>@member.CreatedAt.ToString("dd-MMM-yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
