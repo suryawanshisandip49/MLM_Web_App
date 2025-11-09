@@ -18,7 +18,7 @@ Open solution in Visual Studio 2022 or later.
 
 Update appsettings.json with your SQL Server connection string.
 
-Open Package Manager Console and run migrations (if using Code First) OR run the provided SQL script.
+Database First approach is used.
 
 Build and run the application.
 
